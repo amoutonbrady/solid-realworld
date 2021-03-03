@@ -9,33 +9,36 @@ import createRouteHandler from "./createRouteHandler";
 
 const StoreContext = createContext();
 const RouterContext = createContext();
+
 export function Provider(props) {
   let articles, comments, tags, profile, currentUser;
-  const router = createRouteHandler(""),
-    [state, setState] = createState({
-      get articles() {
-        return articles();
-      },
-      get comments() {
-        return comments();
-      },
-      get tags() {
-        return tags();
-      },
-      get profile() {
-        return profile();
-      },
-      get currentUser() {
-        return currentUser();
-      },
-      page: 0,
-      totalPagesCount: 0,
-      token: localStorage.getItem("jwt"),
-      appName: "conduit"
-    }),
-    actions = {},
-    store = [state, actions],
-    agent = createAgent(store);
+
+  const router = createRouteHandler("");
+
+  const [state, setState] = createState({
+    get articles() {
+      return articles && articles();
+    },
+    get comments() {
+      return comments && comments();
+    },
+    get tags() {
+      return tags && tags();
+    },
+    get profile() {
+      return profile && profile();
+    },
+    get currentUser() {
+      return currentUser && currentUser();
+    },
+    page: 0,
+    totalPagesCount: 0,
+    token: localStorage.getItem("jwt"),
+    appName: "conduit"
+  });
+  const actions = {};
+  const store = [state, actions];
+  const agent = createAgent(store);
 
   articles = createArticles(agent, actions, state, setState);
   comments = createComments(agent, actions, state, setState);
