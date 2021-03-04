@@ -1,19 +1,22 @@
-import { useStore, useRouter } from "../../store";
-import NavLink from "../../components/NavLink";
-import ArticleList from "../../components/ArticleList";
+import NavLink from '../../components/NavLink';
+import { useStore } from '../../store';
+import ArticleList from '../../components/ArticleList';
+import { useRouter } from 'solid-app-router';
 
-export default props => {
-  const [store, { setPage, loadArticles, unfollow, follow }] = useStore(),
-    { location } = useRouter(),
-    handleClick = ev => {
-      ev.preventDefault();
-      store.profile.following ? unfollow() : follow();
-    },
-    handleSetPage = page => {
-      setPage(page);
-      loadArticles();
-    },
-    isUser = () => store.currentUser && props.username === store.currentUser.username;
+export default (props) => {
+  const [store, { setPage, loadArticles, unfollow, follow }] = useStore();
+  const [router] = useRouter();
+
+  const handleClick = (ev) => {
+    ev.preventDefault();
+    store.profile.following ? unfollow() : follow();
+  };
+  const handleSetPage = (page) => {
+    setPage(page);
+    loadArticles();
+  };
+  const isUser = () =>
+    store.currentUser && props.username === store.currentUser.username;
 
   return (
     <div class="profile-page">
@@ -24,21 +27,27 @@ export default props => {
               <img src={store.profile?.image} class="user-img" alt="" />
               <h4 textContent={props.username} />
               <p>{store.profile?.bio}</p>
+
               {isUser() && (
-                <NavLink route="settings" class="btn btn-sm btn-outline-secondary action-btn">
+                <NavLink
+                  route="settings"
+                  class="btn btn-sm btn-outline-secondary action-btn"
+                >
                   <i class="ion-gear-a" /> Edit Profile Settings
                 </NavLink>
               )}
+
               {store.token && !isUser() && (
                 <button
                   class="btn btn-sm action-btn"
                   classList={{
-                    "btn-secondary": store.profile?.following,
-                    "btn-outline-secondary": !store.profile?.following
+                    'btn-secondary': store.profile?.following,
+                    'btn-outline-secondary': !store.profile?.following,
                   }}
                   onClick={handleClick}
                 >
-                  <i class="ion-plus-round" /> {store.profile?.following ? "Unfollow" : "Follow"}{" "}
+                  <i class="ion-plus-round" />{' '}
+                  {store.profile?.following ? 'Unfollow' : 'Follow'}{' '}
                   {store.profile?.username}
                 </button>
               )}
@@ -55,7 +64,7 @@ export default props => {
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
-                    active={location().includes("/favorites") ? 0 : 1}
+                    active={router.location.includes('/favorites') ? 0 : 1}
                     href={`@${props.username}`}
                   >
                     My Articles
@@ -65,7 +74,7 @@ export default props => {
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
-                    active={location().includes("/favorites")}
+                    active={router.location.includes('/favorites')}
                     href={`@${props.username}/favorites`}
                   >
                     Favorited Articles

@@ -1,20 +1,27 @@
-import marked from "marked";
-import NavLink from "../../components/NavLink";
-import { useStore } from "../../store";
+import marked from 'marked';
+import { Show } from 'solid-js';
+import NavLink from '../../components/NavLink';
+import { useStore } from '../../store';
 
-import Comments from "./Comments";
+import Comments from './Comments';
 
-const ArticleMeta = props => (
+const ArticleMeta = (props) => (
   <div class="article-meta">
     <NavLink href={`@${props.article?.author.username}`} route="profile">
       <img src={props.article?.author.image} alt="" />
     </NavLink>
 
     <div class="info">
-      <NavLink href={`@${props.article?.author.username}`} route="profile" class="author">
+      <NavLink
+        href={`@${props.article?.author.username}`}
+        route="profile"
+        class="author"
+      >
         {props.article?.author.username}
       </NavLink>
-      <span class="date">{new Date(props.article?.createdAt).toDateString()}</span>
+      <span class="date">
+        {new Date(props.article?.createdAt).toDateString()}
+      </span>
     </div>
 
     <Show when={props.canModify} fallback={<span />}>
@@ -35,28 +42,38 @@ const ArticleMeta = props => (
 );
 
 export default ({ slug }) => {
-  const [store, { deleteArticle }] = useStore(),
-    article = () => store.articles[slug],
-    canModify = () =>
-      store.currentUser && store.currentUser.username === article()?.author.username,
-    handleDeleteArticle = () => deleteArticle(slug).then(() => (location.hash = "/"));
+  const [store, { deleteArticle }] = useStore();
+  const article = () => store.articles[slug];
+  const canModify = () =>
+    store.currentUser &&
+    store.currentUser.username === article()?.author.username;
+  const handleDeleteArticle = () =>
+    deleteArticle(slug).then(() => (location.hash = '/'));
 
   return (
     <div class="article-page">
       <div class="banner">
         <div class="container">
           <h1>{article()?.title}</h1>
-          <ArticleMeta article={article()} canModify={canModify()} onDelete={handleDeleteArticle} />
+          <ArticleMeta
+            article={article()}
+            canModify={canModify()}
+            onDelete={handleDeleteArticle}
+          />
         </div>
       </div>
 
       <div class="container page">
         <div class="row article-content">
           <div class="col-xs-12">
-            <div innerHTML={article() && marked(article()?.body, { sanitize: true })} />
+            <div
+              innerHTML={
+                article() && marked(article()?.body, { sanitize: true })
+              }
+            />
 
             <ul class="tag-list">
-              {article()?.tagList.map(tag => (
+              {article()?.tagList.map((tag) => (
                 <li class="tag-default tag-pill tag-outline">{tag}</li>
               ))}
             </ul>

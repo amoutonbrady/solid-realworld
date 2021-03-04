@@ -1,7 +1,7 @@
-import NavLink from "./NavLink";
+import NavLink from './NavLink';
 
-const FAVORITED_CLASS = "btn btn-sm btn-primary";
-const NOT_FAVORITED_CLASS = "btn btn-sm btn-outline-primary";
+const FAVORITED_CLASS = 'btn btn-sm btn-primary';
+const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
 
 export default ({ article, token, onClickFavorite }) => {
   const {
@@ -10,7 +10,7 @@ export default ({ article, token, onClickFavorite }) => {
     slug,
     createdAt,
     tagList,
-    author: { username, image }
+    author: { username, image },
   } = article;
 
   return (
@@ -24,7 +24,7 @@ export default ({ article, token, onClickFavorite }) => {
           <NavLink class="author" href={`@${username}`} route="profile">
             {username}
           </NavLink>
-          <span class="date" textContent={/*@once*/ new Date(createdAt).toDateString()} />
+          <span class="date" textContent={new Date(createdAt).toDateString()} />
         </div>
 
         {token && (
@@ -43,9 +43,9 @@ export default ({ article, token, onClickFavorite }) => {
         <h1>{title}</h1>
         <p>{description}</p>
         <span>Read more...</span>
+
         <ul class="tag-list">
-          {/*@once*/
-          tagList.map(tag => (
+          {tagList.map((tag: string) => (
             <li class="tag-default tag-pill tag-outline" textContent={tag} />
           ))}
         </ul>

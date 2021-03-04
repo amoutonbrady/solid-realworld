@@ -1,5 +1,7 @@
-import NavLink from "../../components/NavLink";
-import ArticleList from "../../components/ArticleList";
+import NavLink from '../../components/NavLink';
+import ArticleList from '../../components/ArticleList';
+import { For, Show, Suspense } from 'solid-js';
+import { Link } from 'solid-app-router';
 
 export default ({ appName, token, handleSetPage, tab, store }) => {
   return (
@@ -18,17 +20,25 @@ export default ({ appName, token, handleSetPage, tab, store }) => {
               <ul class="nav nav-pills outline-active">
                 {token && (
                   <li class="nav-item">
-                    <NavLink class="nav-link" href="?tab=feed" active={tab() === "feed"}>
+                    <NavLink
+                      class="nav-link"
+                      href="?tab=feed"
+                      active={tab() === 'feed'}
+                    >
                       Your Feed
                     </NavLink>
                   </li>
                 )}
                 <li class="nav-item">
-                  <NavLink class="nav-link" href="?tab=all" active={tab() === "all"}>
+                  <NavLink
+                    class="nav-link"
+                    href="?tab=all"
+                    active={tab() === 'all'}
+                  >
                     Global Feed
                   </NavLink>
                 </li>
-                <Show when={tab() !== "all" && tab() !== "feed"}>
+                <Show when={tab() !== 'all' && tab() !== 'feed'}>
                   <li class="nav-item">
                     <a href="" class="nav-link active">
                       <i class="ion-pound" /> {tab()}
@@ -49,13 +59,14 @@ export default ({ appName, token, handleSetPage, tab, store }) => {
           <div class="col-md-3">
             <div class="sidebar">
               <p>Popular Tags</p>
+
               <Suspense fallback="Loading tags...">
                 <div class="tag-list">
                   <For each={store.tags}>
-                    {tag => (
-                      <a href={`#/?tab=${tag}`} class="tag-pill tag-default">
+                    {(tag: string) => (
+                      <Link href={`?tab=${tag}`} class="tag-pill tag-default">
                         {tag}
-                      </a>
+                      </Link>
                     )}
                   </For>
                 </div>

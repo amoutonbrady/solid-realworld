@@ -5,7 +5,8 @@
   "main": "public/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "format": "prettier --write \"src/*/*.{jsx,tsx,js,ts,html,json,css}\""
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,12 @@
   "homepage": "https://github.com/ryansolid/solid-realworld#readme",
   "dependencies": {
     "marked": "^2.0.1",
+    "solid-app-router": "^0.0.32",
     "solid-js": "0.24.12"
   },
   "devDependencies": {
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.2",
     "vite": "^2.0.5",
     "vite-plugin-solid": "^1.2.2"
   }

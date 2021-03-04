@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "jsx": "preserve",
+    "moduleResolution": "Node",
+    "jsxImportSource": "solid-js",
+    "strictFunctionTypes": true,
+    "sourceMap": true
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}

@@ -1,19 +1,20 @@
-import { createContext, useContext, createState } from "solid-js";
-import createAgent from "./createAgent";
-import createArticles from "./createArticles";
-import createAuth from "./createAuth";
-import createCommon from "./createCommon";
-import createComments from "./createComments";
-import createProfile from "./createProfile";
-import createRouteHandler from "./createRouteHandler";
+import { createContext, useContext, createState } from 'solid-js';
+
+import createAgent from './createAgent';
+import createArticles from './createArticles';
+import createAuth from './createAuth';
+import createCommon from './createCommon';
+import createComments from './createComments';
+import createProfile from './createProfile';
 
 const StoreContext = createContext();
-const RouterContext = createContext();
 
 export function Provider(props) {
-  let articles, comments, tags, profile, currentUser;
-
-  const router = createRouteHandler("");
+  let articles;
+  let comments;
+  let tags;
+  let profile;
+  let currentUser;
 
   const [state, setState] = createState({
     get articles() {
@@ -33,11 +34,12 @@ export function Provider(props) {
     },
     page: 0,
     totalPagesCount: 0,
-    token: localStorage.getItem("jwt"),
-    appName: "conduit"
+    token: localStorage.getItem('jwt'),
+    appName: 'conduit',
   });
+
   const actions = {};
-  const store = [state, actions];
+  const store: [any, any] = [state, actions];
   const agent = createAgent(store);
 
   articles = createArticles(agent, actions, state, setState);
@@ -47,16 +49,12 @@ export function Provider(props) {
   currentUser = createAuth(agent, actions, setState);
 
   return (
-    <RouterContext.Provider value={router}>
-      <StoreContext.Provider value={store}>{props.children}</StoreContext.Provider>
-    </RouterContext.Provider>
+    <StoreContext.Provider value={store}>
+      {props.children}
+    </StoreContext.Provider>
   );
 }
 
-export function useStore() {
+export function useStore(): any {
   return useContext(StoreContext);
-}
-
-export function useRouter() {
-  return useContext(RouterContext);
 }
