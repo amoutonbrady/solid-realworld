@@ -1,4 +1,5 @@
 import marked from 'marked';
+import { useRouter } from 'solid-app-router';
 import { Show } from 'solid-js';
 import NavLink from '../../components/NavLink';
 import { useStore } from '../../store';
@@ -7,13 +8,16 @@ import Comments from './Comments';
 
 const ArticleMeta = (props) => (
   <div class="article-meta">
-    <NavLink href={`@${props.article?.author.username}`} route="profile">
+    <NavLink
+      href={`profile/@${props.article?.author.username}`}
+      route="profile"
+    >
       <img src={props.article?.author.image} alt="" />
     </NavLink>
 
     <div class="info">
       <NavLink
-        href={`@${props.article?.author.username}`}
+        href={`profile/@${props.article?.author.username}`}
         route="profile"
         class="author"
       >
@@ -41,20 +45,23 @@ const ArticleMeta = (props) => (
   </div>
 );
 
-export default ({ slug }) => {
+export default (props) => {
   const [store, { deleteArticle }] = useStore();
-  const article = () => store.articles[slug];
+  const [, { push }] = useRouter();
+
+  const article = () => store.articles[props.slug];
   const canModify = () =>
     store.currentUser &&
     store.currentUser.username === article()?.author.username;
   const handleDeleteArticle = () =>
-    deleteArticle(slug).then(() => (location.hash = '/'));
+    deleteArticle(props.slug).then(() => push('/'));
 
   return (
     <div class="article-page">
       <div class="banner">
         <div class="container">
           <h1>{article()?.title}</h1>
+
           <ArticleMeta
             article={article()}
             canModify={canModify()}

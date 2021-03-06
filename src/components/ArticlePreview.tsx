@@ -16,12 +16,12 @@ export default ({ article, token, onClickFavorite }) => {
   return (
     <div class="article-preview">
       <div class="article-meta">
-        <NavLink href={`@${username}`} route="profile">
-          <img src={image} alt="" />
+        <NavLink href={`profile/@${username}`} route="profile">
+          <img src={image} alt="Profile picture of the user" />
         </NavLink>
 
         <div class="info">
-          <NavLink class="author" href={`@${username}`} route="profile">
+          <NavLink class="author" href={`profile/@${username}`} route="profile">
             {username}
           </NavLink>
           <span class="date" textContent={new Date(createdAt).toDateString()} />

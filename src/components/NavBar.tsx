@@ -48,7 +48,7 @@ export default () => {
               <NavLink
                 class="nav-link"
                 route="profile"
-                href={`@${store.currentUser.username}`}
+                href={`profile/@${store.currentUser.username}`}
               >
                 {store.currentUser.username}
               </NavLink>

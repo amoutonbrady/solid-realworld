@@ -1,11 +1,11 @@
 import { RouteDefinition } from 'solid-app-router';
 import { lazy } from 'solid-js';
 
-const Article = lazy(() => import('./pages/Article/Article'));
+const Article = lazy(() => import('./pages/Article'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Editor = lazy(() => import('./pages/Editor'));
 const Home = lazy(() => import('./pages/Home'));
-const Profile = lazy(() => import('./pages/Profile/Profile'));
+const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
 
 export const routes: RouteDefinition[] = [
@@ -14,7 +14,11 @@ export const routes: RouteDefinition[] = [
     component: Home,
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
+    component: Profile,
+  },
+  {
+    path: '/profile/:id/favorites',
     component: Profile,
   },
   {
@@ -30,11 +34,15 @@ export const routes: RouteDefinition[] = [
     component: Auth,
   },
   {
-    path: '/article/:id',
+    path: '/article/:slug',
     component: Article,
   },
   {
-    path: '/editor/:id',
+    path: '/editor',
+    component: Editor,
+  },
+  {
+    path: '/editor/:slug',
     component: Editor,
   },
 ];

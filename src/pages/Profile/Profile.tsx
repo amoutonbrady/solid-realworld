@@ -64,8 +64,8 @@ export default (props) => {
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
-                    active={router.location.includes('/favorites') ? 0 : 1}
-                    href={`@${props.username}`}
+                    active={!router.location.includes('favorites')}
+                    href={`profile/@${props.username}`}
                   >
                     My Articles
                   </NavLink>
@@ -74,8 +74,8 @@ export default (props) => {
                 <li class="nav-item">
                   <NavLink
                     class="nav-link"
-                    active={router.location.includes('/favorites')}
-                    href={`@${props.username}/favorites`}
+                    active={router.location.includes('favorites')}
+                    href={`profile/@${props.username}/favorites`}
                   >
                     Favorited Articles
                   </NavLink>

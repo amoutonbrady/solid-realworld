@@ -2,10 +2,12 @@ import { createState, createComputed, For } from 'solid-js';
 
 import { useStore } from '../../store';
 import ListErrors from '../../components/ListErrors';
+import { useRouter } from 'solid-app-router';
 
-export default ({ slug }) => {
+export default (props) => {
+  const [, { push }] = useRouter();
   const [store, { createArticle, updateArticle }] = useStore();
-  const [state, setState] = createState({
+  const emptyArticle = {
     tagInput: '',
     tagList: [],
     inProgress: false,
@@ -14,7 +16,9 @@ export default ({ slug }) => {
     title: '',
     description: '',
     body: '',
-  });
+  };
+
+  const [state, setState] = createState({ ...emptyArticle });
 
   const updateState = (field) => (ev) => setState(field, ev.target.value);
   const handleAddTag = () => {
@@ -43,19 +47,24 @@ export default ({ slug }) => {
   };
   const submitForm = (ev) => {
     ev.preventDefault();
+
     setState({ inProgress: true });
     const { inProgress, tagsInput, ...article } = state;
 
-    (slug ? updateArticle : createArticle)(article)
-      .then((article) => (location.hash = `/article/${article.slug}`))
+    (props.slug ? updateArticle : createArticle)(article)
+      .then((article) => push(`/article/${article.slug}`))
       .catch((errors) => setState({ errors }))
       .finally(() => setState({ inProgress: false }));
   };
 
   createComputed(() => {
-    let article;
-    if (!slug || !(article = store.articles[slug])) return;
-    setState(article);
+    const article = store.articles[props.slug];
+
+    if (article) {
+      setState(article);
+    } else {
+      setState({ ...emptyArticle });
+    }
   });
 
   return (
@@ -73,7 +82,7 @@ export default ({ slug }) => {
                     class="form-control form-control-lg"
                     placeholder="Article Title"
                     value={state.title}
-                    onChange={updateState('title')}
+                    onInput={updateState('title')}
                     disabled={state.inProgress}
                   />
                 </fieldset>
@@ -83,7 +92,7 @@ export default ({ slug }) => {
                     class="form-control"
                     placeholder="What's this article about?"
                     value={state.description}
-                    onChange={updateState('description')}
+                    onInput={updateState('description')}
                     disabled={state.inProgress}
                   />
                 </fieldset>
@@ -93,7 +102,7 @@ export default ({ slug }) => {
                     rows="8"
                     placeholder="Write your article (in markdown)"
                     value={state.body}
-                    onChange={updateState('body')}
+                    onInput={updateState('body')}
                     disabled={state.inProgress}
                   ></textarea>
                 </fieldset>
@@ -103,7 +112,7 @@ export default ({ slug }) => {
                     class="form-control"
                     placeholder="Enter tags"
                     value={state.tagInput}
-                    onChange={updateState('tagInput')}
+                    onInput={updateState('tagInput')}
                     onBlur={handleAddTag}
                     onKeyUp={handleTagInputKeyDown}
                     disabled={state.inProgress}

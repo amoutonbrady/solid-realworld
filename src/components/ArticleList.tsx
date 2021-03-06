@@ -5,11 +5,11 @@ import ArticlePreview from './ArticlePreview';
 
 export default (props) => {
   const [{ token }, { unmakeFavorite, makeFavorite }] = useStore();
-  let slug = '';
 
-  const handleClickFavorite = (article, e) => {
-    e.preventDefault();
-    article.favorited ? unmakeFavorite(slug) : makeFavorite(slug);
+  const handleClickFavorite = (article) => {
+    article.favorited
+      ? unmakeFavorite(article.slug)
+      : makeFavorite(article.slug);
   };
 
   const handlePage = (v, e) => {

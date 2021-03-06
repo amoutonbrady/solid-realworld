@@ -12,14 +12,18 @@ export default function createArticles(agent, actions, state, setState) {
           queueMicrotask(() =>
             setState({ totalPagesCount: Math.ceil(articlesCount / LIMIT) }),
           );
+
           return articles.reduce((memo, article) => {
             memo[article.slug] = article;
             return memo;
           }, {});
         });
       }
+
       const article = state.articles[args[1]];
+
       if (article) return prev();
+
       return agent.Articles.get(args[1]).then((article) => ({
         ...prev(),
         [args[1]]: article,
@@ -53,11 +57,13 @@ export default function createArticles(agent, actions, state, setState) {
     },
     async makeFavorite(slug) {
       const article = state.articles[slug];
+
       if (article && !article.favorited) {
         setState('articles', slug, (s) => ({
           favorited: true,
           favoritesCount: s.favoritesCount + 1,
         }));
+
         try {
           await agent.Articles.favorite(slug);
         } catch (err) {
@@ -65,17 +71,20 @@ export default function createArticles(agent, actions, state, setState) {
             favorited: false,
             favoritesCount: s.favoritesCount - 1,
           }));
+
           throw err;
         }
       }
     },
     async unmakeFavorite(slug) {
       const article = state.articles[slug];
+
       if (article && article.favorited) {
         setState('articles', slug, (s) => ({
           favorited: false,
           favoritesCount: s.favoritesCount - 1,
         }));
+
         try {
           await agent.Articles.unfavorite(slug);
         } catch (err) {
@@ -83,6 +92,7 @@ export default function createArticles(agent, actions, state, setState) {
             favorited: true,
             favoritesCount: s.favoritesCount + 1,
           }));
+
           throw err;
         }
       }

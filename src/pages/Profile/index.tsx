@@ -6,18 +6,15 @@ const Profile = lazy(() => import('./Profile'));
 export default function (props) {
   const [, { loadProfile, loadArticles }] = useStore();
   const [router] = useRouter();
+  const profile = () => (router.params.id as string).slice(1);
 
-  createComputed(
-    () => props.routeName === 'profile' && loadProfile(props.params[0]),
+  createComputed(() => loadProfile(profile()));
+
+  createComputed(() =>
+    router.location.includes('/favorites')
+      ? loadArticles({ favoritedBy: profile() })
+      : loadArticles({ author: profile() }),
   );
 
-  createComputed(
-    () =>
-      props.routeName === 'profile' &&
-      (router.location.includes('/favorites')
-        ? loadArticles({ favoritedBy: props.params[0] })
-        : loadArticles({ author: props.params[0] })),
-  );
-
-  return <Profile username={props.params[0]} />;
+  return <Profile username={profile()} />;
 }
