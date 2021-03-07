@@ -1,25 +1,32 @@
-# ![RealWorld Example App](.github/logo.png)
+## Usage
 
-_note: this is a fork of the original Solid Real World application to make it work with Vite and potentially SSR... The original project can be found [over here](https://github.com/ryansolid/solid-realworld)_
+Those templates dependencies are maintained via [pnpm](https://pnpm.js.org/) via `pnpm up -i --latest`.
+This is the reason you see a `pnpm-lock.yaml`. This is my favorite package manager because it's fast and doesn't bloat the `node_modules` folder.
 
-> ### Solid.js codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
+Note that any package manager should work. I'd just advice you to remove the `pnpm-lock.yml` file before doing an install via your package manager of choice.
 
-### [Demo](https://solid-realworld.netlify.app/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/ryansolid/solid-realworld)
+```bash
+$ pnpm install # or npm install or yarn install
+```
+## Available Scripts
 
-This codebase was created to demonstrate a fully fledged fullstack application built with Solid.js including CRUD operations, authentication, routing, pagination, and more.
+In the project directory, you can run:
 
-We've gone to great lengths to adhere to the Solid.js community styleguides & best practices.
+### `npm run dev`
 
-For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-# Getting started
+The page will reload if you make edits.<br>
 
-To run locally during development:
+### `npm run build`
 
-- `pnpm install` to install all dependencies
-- `pnpm dev` to build and serve app locally
-- browse to http://localhost:3000/
+Builds the app for production to the `dist` folder.<br>
+It correctly bundles Solid in production mode and optimizes the build for the best performance.
 
-To create a production build:
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
 
-- `pnpm build` creates a development build, with all source compiled into [./dist](./dist) folder
+## Deployment
+
+You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)

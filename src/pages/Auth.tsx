@@ -1,38 +1,32 @@
-import { createState } from 'solid-js';
-import { useRouter } from 'solid-app-router';
+import { Link, useRouter } from "solid-app-router";
+import { Component, createSignal, For, JSX, Show } from "solid-js";
+import Errors from "../components/Errors";
+import { useApi } from "../store/apiStore";
+import { useStore } from "../store/globalStore";
+import { prevent } from "../utils/preventDefault";
 
-import { useStore } from '../store';
-import NavLink from '../components/NavLink';
-import ListErrors from '../components/ListErrors';
-
-export default () => {
+const Auth: Component = () => {
+  const authApi = useApi("auth");
+  const [, { setUser }] = useStore();
   const [router, { push }] = useRouter();
-  const [, { register, login }] = useStore();
 
-  const [state, setState] = createState({
-    username: '',
-    inProgress: false,
-    email: '',
-    password: '',
-    errors: '',
-  });
+  const [errors, setErrors] = createSignal<Error | Record<string, string[]>>();
 
-  const isLogin = () => router.location.includes('login');
-  const text = () => (isLogin() ? 'Sign in' : 'Sign up');
+  const isLogin = () => router.location.includes("login");
+  const page = () => (isLogin() ? "Sign in" : "Sign up");
 
-  const handleSubmit = (e: Event) => {
-    e.preventDefault();
+  const submit: JSX.EventHandlerUnion<HTMLFormElement, Event> = async (
+    event
+  ) => {
+    const data = new FormData(event.currentTarget);
+    const body = Object.fromEntries(data) as any;
 
-    setState({ inProgress: true });
+    const res = isLogin() ? authApi.login(body) : authApi.register(body);
 
-    const action$ = isLogin()
-      ? login(state.email, state.password)
-      : register(state.username, state.email, state.password);
-
-    action$
-      .then(() => push('/'))
-      .catch((errors) => setState({ errors }))
-      .finally(() => setState({ inProgress: false }));
+    return res
+      .then(setUser)
+      .then(() => push("/"))
+      .catch(setErrors);
   };
 
   return (
@@ -40,39 +34,43 @@ export default () => {
       <div class="container page">
         <div class="row">
           <div class="col-md-6 offset-md-3 col-xs-12">
-            <h1 class="text-xs-center">{text()}</h1>
-            <p class="text-xs-center">
-              {isLogin() ? (
-                <NavLink route="/register">Need an account?</NavLink>
-              ) : (
-                <NavLink route="/login">Have an account?</NavLink>
-              )}
-            </p>
+            <h1 class="text-xs-center">{page()}</h1>
 
-            <ListErrors errors={state.errors} />
+            <Show
+              when={!isLogin()}
+              fallback={
+                <p class="text-xs-center">
+                  <Link href="/register">Need an account?</Link>
+                </p>
+              }
+            >
+              <p class="text-xs-center">
+                <Link href="/login">Have an account?</Link>
+              </p>
+            </Show>
 
-            <form onSubmit={handleSubmit}>
-              {!isLogin() && (
+            <Show when={errors()}>
+              <Errors errors={errors()} />
+            </Show>
+
+            <form onSubmit={prevent(submit)}>
+              <Show when={!isLogin()}>
                 <fieldset class="form-group">
                   <input
                     class="form-control form-control-lg"
                     type="text"
-                    placeholder="Username"
-                    value={state.username}
-                    onChange={(e) =>
-                      setState('username', e.currentTarget.value)
-                    }
+                    name="username"
+                    placeholder="Your Name"
                   />
                 </fieldset>
-              )}
+              </Show>
 
               <fieldset class="form-group">
                 <input
                   class="form-control form-control-lg"
                   type="text"
+                  name="email"
                   placeholder="Email"
-                  value={state.email}
-                  onChange={(e) => setState('email', e.currentTarget.value)}
                 />
               </fieldset>
 
@@ -80,18 +78,16 @@ export default () => {
                 <input
                   class="form-control form-control-lg"
                   type="password"
+                  name="password"
                   placeholder="Password"
-                  value={state.password}
-                  onChange={(e) => setState('password', e.currentTarget.value)}
                 />
               </fieldset>
 
               <button
-                class="btn btn-lg btn-primary pull-xs-right"
                 type="submit"
-                disabled={state.inProgress}
+                class="btn btn-lg btn-primary pull-xs-right"
               >
-                {text()}
+                {page()}
               </button>
             </form>
           </div>
@@ -100,3 +96,5 @@ export default () => {
     </div>
   );
 };
+
+export default Auth;

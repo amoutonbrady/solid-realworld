@@ -1,55 +1,39 @@
-import NavLink from './NavLink';
+import { Link } from "solid-app-router";
+import { Component } from "solid-js";
+import { IArticle } from "../types/article.interface";
 
-const FAVORITED_CLASS = 'btn btn-sm btn-primary';
-const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
-
-export default ({ article, token, onClickFavorite }) => {
-  const {
-    title,
-    description,
-    slug,
-    createdAt,
-    tagList,
-    author: { username, image },
-  } = article;
-
+const ArticlePreview: Component<{ article: IArticle }> = (props) => {
   return (
     <div class="article-preview">
       <div class="article-meta">
-        <NavLink href={`profile/@${username}`} route="profile">
-          <img src={image} alt="Profile picture of the user" />
-        </NavLink>
+        <Link href={`/profile/${props.article.author.username}`}>
+          <img src={props.article.author.image} />
+        </Link>
 
         <div class="info">
-          <NavLink class="author" href={`profile/@${username}`} route="profile">
-            {username}
-          </NavLink>
-          <span class="date" textContent={new Date(createdAt).toDateString()} />
-        </div>
+          <Link
+            href={`/profile/${props.article.author.username}`}
+            class="author"
+          >
+            {props.article.author.username}
+          </Link>
 
-        {token && (
-          <div class="pull-xs-right">
-            <button
-              class={article.favorited ? FAVORITED_CLASS : NOT_FAVORITED_CLASS}
-              onClick={[onClickFavorite, article]}
-            >
-              <i class="ion-heart" /> {article.favoritesCount}
-            </button>
-          </div>
-        )}
+          <span class="date">
+            {new Date(props.article.createdAt).toLocaleDateString()}
+          </span>
+        </div>
+        <button class="btn btn-outline-primary btn-sm pull-xs-right">
+          <i class="ion-heart"></i> {props.article.favoritesCount}
+        </button>
       </div>
 
-      <NavLink href={`article/${slug}`} route="article" class="preview-link">
-        <h1>{title}</h1>
-        <p>{description}</p>
+      <Link href={`/article/${props.article.slug}`} class="preview-link">
+        <h1>{props.article.title}</h1>
+        <p>{props.article.description}</p>
         <span>Read more...</span>
-
-        <ul class="tag-list">
-          {tagList.map((tag: string) => (
-            <li class="tag-default tag-pill tag-outline" textContent={tag} />
-          ))}
-        </ul>
-      </NavLink>
+      </Link>
     </div>
   );
 };
+
+export default ArticlePreview;

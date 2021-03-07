@@ -1,0 +1,20 @@
+{
+  "background_color": "",
+  "theme_color": "",
+  "name": "Solid RealWorld",
+  "short_name": "RealWorld",
+  "display": "minimal-ui",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

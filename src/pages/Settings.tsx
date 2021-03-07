@@ -1,43 +1,36 @@
-import { createState } from 'solid-js';
+import { useRouter } from "solid-app-router";
+import { Component, createComputed, createSignal, JSX, Show } from "solid-js";
+import Errors from "../components/Errors";
+import { useApi } from "../store/apiStore";
+import { useStore } from "../store/globalStore";
+import { prevent } from "../utils/preventDefault";
 
-import { useStore } from '../store';
-import ListErrors from '../components/ListErrors';
+const Settings: Component = () => {
+  const api = useApi();
+  const [, { push }] = useRouter();
+  const [store, { setUser }] = useStore();
 
-export default () => {
-  const [store, { logout, updateUser }] = useStore();
+  createComputed(() => {
+    if (!store.isLoggedIn) push("/");
+  });
 
-  const initialState = {
-    password: '',
-    errors: '',
-    email: store.currentUser.email,
-    updatingUser: false,
-    image: store.currentUser.image || '',
-    username: store.currentUser.username,
-    bio: store.currentUser.bio || '',
+  const [errors, setErrors] = createSignal<Error | Record<string, string[]>>();
+
+  const submit: JSX.EventHandlerUnion<HTMLFormElement, Event> = async (
+    event
+  ) => {
+    const data = new FormData(event.currentTarget);
+    const body = Object.fromEntries(data) as any;
+
+    if (!body.password) delete body.password;
+    if (!body.image) delete body.image;
+
+    return api.auth.update(body).then(setUser).catch(setErrors);
   };
 
-  type Keys = keyof typeof initialState;
-
-  const [state, setState] = createState(initialState);
-
-  const updateState = (field: Keys) => (ev) => {
-    setState(field, ev.currentTarget.value);
-  };
-
-  const submitForn = (ev: Event) => {
-    ev.preventDefault();
-
-    const user = Object.assign({}, state);
-
-    if (!user.password) delete user.password;
-    if (!user.image) delete user.image;
-
-    setState({ updatingUser: true });
-
-    updateUser(user)
-      .then(() => (location.hash = `/@${user.username}`))
-      .catch((errors) => setState({ errors }))
-      .finally(() => setState({ updatingUser: false }));
+  const logout = () => {
+    setUser();
+    push("/");
   };
 
   return (
@@ -47,18 +40,19 @@ export default () => {
           <div class="col-md-6 offset-md-3 col-xs-12">
             <h1 class="text-xs-center">Your Settings</h1>
 
-            <ListErrors errors={state.errors} />
+            <Show when={errors()}>
+              <Errors errors={errors()} />
+            </Show>
 
-            <form onSubmit={submitForn}>
+            <form onSubmit={prevent(submit)}>
               <fieldset>
                 <fieldset class="form-group">
                   <input
                     class="form-control"
                     type="text"
+                    name="image"
+                    value={store.user.image}
                     placeholder="URL of profile picture"
-                    value={state.image}
-                    onChange={updateState('image')}
-                    disabled={state.updatingUser}
                   />
                 </fieldset>
 
@@ -66,10 +60,9 @@ export default () => {
                   <input
                     class="form-control form-control-lg"
                     type="text"
+                    name="username"
+                    value={store.user.username}
                     placeholder="Your Name"
-                    value={state.username}
-                    onChange={updateState('username')}
-                    disabled={state.updatingUser}
                   />
                 </fieldset>
 
@@ -77,11 +70,11 @@ export default () => {
                   <textarea
                     class="form-control form-control-lg"
                     rows="8"
+                    name="bio"
                     placeholder="Short bio about you"
-                    value={state.bio}
-                    onChange={updateState('bio')}
-                    disabled={state.updatingUser}
-                  ></textarea>
+                  >
+                    {store.user.bio}
+                  </textarea>
                 </fieldset>
 
                 <fieldset class="form-group">
@@ -89,9 +82,8 @@ export default () => {
                     class="form-control form-control-lg"
                     type="text"
                     placeholder="Email"
-                    value={state.email}
-                    onChange={updateState('email')}
-                    disabled={state.updatingUser}
+                    name="email"
+                    value={store.user.email}
                   />
                 </fieldset>
 
@@ -99,27 +91,23 @@ export default () => {
                   <input
                     class="form-control form-control-lg"
                     type="password"
+                    name="password"
                     placeholder="Password"
-                    value={state.password}
-                    onChange={updateState('password')}
-                    disabled={state.updatingUser}
                   />
                 </fieldset>
 
                 <button
-                  class="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
-                  disabled={state.updatingUser}
+                  class="btn btn-lg btn-primary pull-xs-right"
                 >
                   Update Settings
                 </button>
               </fieldset>
             </form>
+
             <hr />
-            <button
-              class="btn btn-outline-danger"
-              onClick={() => (logout(), (location.hash = '/'))}
-            >
+
+            <button onClick={logout} class="btn btn-outline-danger">
               Or click here to logout.
             </button>
           </div>
@@ -128,3 +116,5 @@ export default () => {
     </div>
   );
 };
+
+export default Settings;

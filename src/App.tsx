@@ -1,28 +1,21 @@
-import { Route } from 'solid-app-router';
-import { createSignal, createComputed, Show, Suspense } from 'solid-js';
+import { Route } from "solid-app-router";
+import { Component, Suspense } from "solid-js";
+import Footer from "./components/Footer";
 
-import { useStore } from './store';
-import NavBar from './components/NavBar';
+import Nav from "./components/Nav";
 
-export default () => {
-  const [store, { pullUser }] = useStore();
-  const [appLoaded, setAppLoaded] = createSignal(false);
-
-  if (!store.token) setAppLoaded(true);
-  else {
-    pullUser();
-    createComputed(() => store.currentUser && setAppLoaded(true));
-  }
-
+const App: Component = () => {
   return (
     <>
-      <NavBar />
+      <Nav />
 
-      <Show when={appLoaded()}>
-        <Suspense fallback={<div class="container">Loading...</div>}>
-          <Route />
-        </Suspense>
-      </Show>
+      <Suspense fallback={<p>Loading...</p>}>
+        <Route />
+      </Suspense>
+
+      <Footer />
     </>
   );
 };
+
+export default App;
