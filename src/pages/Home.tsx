@@ -10,10 +10,6 @@ const Home: Component<{
   const [store] = useStore();
   const [router] = useRouter();
 
-  createEffect(() => {
-    console.log({ ...props });
-  });
-
   return (
     <div class="home-page">
       <div class="banner">
