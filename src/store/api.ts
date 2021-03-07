@@ -27,9 +27,7 @@ function httpClient(endpoint: string, request: typeof fetch) {
       },
     };
 
-    const cleanURL = `${endpoint}/${url}`
-      .replaceAll("//", "/")
-      .replace(/\?$/, "");
+    const cleanURL = endpoint + url.replace(/\?$/, "");
 
     const response = await request(cleanURL, opts);
     const json = await response.json();
