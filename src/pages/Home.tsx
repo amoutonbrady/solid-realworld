@@ -1,5 +1,5 @@
 import { Link, Route, useRouter } from "solid-app-router";
-import { Component, For, Show } from "solid-js";
+import { Component, createEffect, For, Show } from "solid-js";
 import { useStore } from "../store/globalStore";
 import { IArticle } from "../types/article.interface";
 
@@ -9,6 +9,10 @@ const Home: Component<{
 }> = (props) => {
   const [store] = useStore();
   const [router] = useRouter();
+
+  createEffect(() => {
+    console.log({ ...props });
+  });
 
   return (
     <div class="home-page">

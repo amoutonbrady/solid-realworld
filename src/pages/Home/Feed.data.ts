@@ -8,6 +8,8 @@ const HomeFeedData: DataFn = (props) => {
   const [articles] = createResource(
     () => props,
     ({ location, query }) => {
+      if (!["/", "/feed"].includes(location)) return;
+
       return location.includes("feed")
         ? api.article.feed(query as any)
         : api.article.list(query);
