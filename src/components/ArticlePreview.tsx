@@ -1,8 +1,11 @@
 import { Link } from "solid-app-router";
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
+import { useStore } from "../store/globalStore";
 import { IArticle } from "../types/article.interface";
 
 const ArticlePreview: Component<{ article: IArticle }> = (props) => {
+  const [store] = useStore();
+
   return (
     <div class="article-preview">
       <div class="article-meta">
@@ -22,9 +25,11 @@ const ArticlePreview: Component<{ article: IArticle }> = (props) => {
             {new Date(props.article.createdAt).toLocaleDateString()}
           </span>
         </div>
-        <button class="btn btn-outline-primary btn-sm pull-xs-right">
-          <i class="ion-heart"></i> {props.article.favoritesCount}
-        </button>
+        <Show when={store.isLoggedIn}>
+          <button class="btn btn-outline-primary btn-sm pull-xs-right">
+            <i class="ion-heart"></i> {props.article.favoritesCount}
+          </button>
+        </Show>
       </div>
 
       <Link href={`/article/${props.article.slug}`} class="preview-link">
