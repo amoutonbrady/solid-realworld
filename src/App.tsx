@@ -8,11 +8,7 @@ const App: Component = () => {
   return (
     <>
       <Nav />
-
-      <Suspense fallback={<p>Loading...</p>}>
-        <Route />
-      </Suspense>
-
+      <Route />
       <Footer />
     </>
   );
