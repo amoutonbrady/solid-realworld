@@ -1,18 +1,3 @@
-diff --git a/node_modules/solid-app-router/dist/index.d.ts b/node_modules/solid-app-router/dist/index.d.ts
-index a0cd1c3..4f278d9 100644
---- a/node_modules/solid-app-router/dist/index.d.ts
-+++ b/node_modules/solid-app-router/dist/index.d.ts
-@@ -5,6 +5,10 @@ export type { Params, QueryParams } from "./recognizer";
- export declare type DataFnParams<T> = {
-     params: Params<T>;
-     query: QueryParams;
-+    root: string;
-+    location: string;
-+    pending: boolean;
-+    level: number;
- };
- export declare type DataFn<T = BaseObject> = (props: DataFnParams<T>) => BaseObject;
- export interface LinkProps extends JSX.AnchorHTMLAttributes<HTMLAnchorElement> {
 diff --git a/node_modules/solid-app-router/dist/index.jsx b/node_modules/solid-app-router/dist/index.jsx
 index 3f426a0..771a23b 100644
 --- a/node_modules/solid-app-router/dist/index.jsx
