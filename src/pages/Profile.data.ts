@@ -9,7 +9,7 @@ const ProfileData: DataFn<{ username: string }> = (props) => {
   const [store] = useStore();
 
   const isFavorites = () => props.location.includes("favorite");
-  const isCurrentUser = () => store.user.username === props.params.username;
+  const isCurrentUser = () => store.user?.username === props.params.username;
 
   const [profile] = createResource(
     () => props.params.username,
