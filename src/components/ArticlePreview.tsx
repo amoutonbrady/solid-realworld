@@ -27,7 +27,13 @@ const ArticlePreview: Component<{ article: IArticle }> = (props) => {
     <div class="article-preview">
       <div class="article-meta">
         <Link href={`/profile/${article.author.username}`}>
-          <img src={article.author.image} />
+          <span class="sr-only">
+            Navigate to {article.author.image}'s profile
+          </span>
+          <img
+            src={article.author.image}
+            alt={`${article.author.image} profile picture`}
+          />
         </Link>
 
         <div class="info">
