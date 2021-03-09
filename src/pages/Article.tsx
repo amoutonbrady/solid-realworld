@@ -6,6 +6,7 @@ import { IComment } from "../types/comment.interface";
 import { useStore } from "../store/globalStore";
 import { useApi } from "../store/apiStore";
 import { prevent } from "../utils/preventDefault";
+import { formatDate } from "../utils/formatDate";
 
 const Article: Component<{
   article: IArticle;
@@ -16,7 +17,7 @@ const Article: Component<{
   const api = useApi();
   const [, { push }] = useRouter();
 
-  const isCurrentUserArtilce = () =>
+  const isCurrentUserArticle = () =>
     store.user?.username === props.article?.author.username;
 
   const deleteArticle = () =>
@@ -52,14 +53,13 @@ const Article: Component<{
                 >
                   {props.article.author.username}
                 </Link>
-                <span class="date">
-                  {new Date(props.article.createdAt).toLocaleDateString()}
-                </span>
+
+                <span class="date">{formatDate(props.article.createdAt)}</span>
               </div>
 
               <Show when={store.isLoggedIn}>
                 <Show
-                  when={isCurrentUserArtilce()}
+                  when={isCurrentUserArticle()}
                   fallback={
                     <>
                       <button class="btn btn-sm btn-outline-secondary">
@@ -67,8 +67,10 @@ const Article: Component<{
                         {props.article.author.username}{" "}
                         <span
                           class="counter"
-                          classList={{
-                            hidden: !props.article.author.following,
+                          style={{
+                            display: props.article.author.following
+                              ? "inline-block"
+                              : "none",
                           }}
                         >
                           ({props.article.author.following})
@@ -185,7 +187,7 @@ const Article: Component<{
                       </Link>
 
                       <span class="date-posted">
-                        {new Date(comment.createdAt).toLocaleDateString()}
+                        {formatDate(comment.createdAt)}
                       </span>
 
                       <Show when={store.isLoggedIn}>
