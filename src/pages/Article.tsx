@@ -1,20 +1,22 @@
+import marked from "marked";
 import { Link, useRouter } from "solid-app-router";
 import { Component, For, JSX, Show } from "solid-js";
-import marked from "marked";
-import { IArticle } from "../types/article.interface";
-import { IComment } from "../types/comment.interface";
-import { useStore } from "../store/globalStore";
+
+import If from "../components/If";
 import { useApi } from "../store/apiStore";
-import { prevent } from "../utils/preventDefault";
+import { useStore } from "../store/globalStore";
 import { formatDate } from "../utils/formatDate";
+import { prevent } from "../utils/preventDefault";
+import { IComment } from "../types/comment.interface";
+import { IArticle } from "../types/article.interface";
 
 const Article: Component<{
   article: IArticle;
   comments: IComment[];
   refetchComments: () => void;
 }> = (props) => {
-  const [store] = useStore();
   const api = useApi();
+  const [store] = useStore();
   const [, { push }] = useRouter();
 
   const isCurrentUserArticle = () =>
@@ -57,7 +59,7 @@ const Article: Component<{
                 <span class="date">{formatDate(props.article.createdAt)}</span>
               </div>
 
-              <Show when={store.isLoggedIn}>
+              <If condition={store.isLoggedIn}>
                 <Show
                   when={isCurrentUserArticle()}
                   fallback={
@@ -100,7 +102,7 @@ const Article: Component<{
                     <i class="ion-trash-a"></i> Delete article
                   </button>
                 </Show>
-              </Show>
+              </If>
             </div>
           </div>
         </div>

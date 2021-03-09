@@ -47,7 +47,9 @@ const Home: Component<{
               </ul>
             </div>
 
-            <Suspense fallback={<p>Loading feed...</p>}>
+            <Suspense
+              fallback={<div class="article-preview">Loading feed...</div>}
+            >
               <Route />
             </Suspense>
           </div>
@@ -57,7 +59,7 @@ const Home: Component<{
               <p>Popular Tags</p>
 
               <div class="tag-list">
-                <Show when={props.tags} fallback={<p>Loading tags...</p>}>
+                <Suspense fallback={<p>Loading tags...</p>}>
                   <For each={props.tags}>
                     {(tag) => (
                       <Link href={`/?tag=${tag}`} class="tag-pill tag-default">
@@ -65,7 +67,7 @@ const Home: Component<{
                       </Link>
                     )}
                   </For>
-                </Show>
+                </Suspense>
               </div>
             </div>
           </div>

@@ -40,7 +40,11 @@ const ArticlePreview: Component<{ article: IArticle }> = (props) => {
         <Show when={store.isLoggedIn}>
           <button
             onClick={updateFavorite}
-            class="btn btn-outline-primary btn-sm pull-xs-right"
+            class="btn btn-sm pull-xs-right"
+            classList={{
+              "btn-outline-primary": !article.favorited,
+              "btn-primary": article.favorited,
+            }}
           >
             <i class="ion-heart"></i> {article.favoritesCount}
           </button>
