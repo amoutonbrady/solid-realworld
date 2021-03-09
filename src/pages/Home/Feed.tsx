@@ -6,7 +6,7 @@ const HomeFeed: Component<{
   articles: { articles: IArticle[]; articlesCount: number };
 }> = (props) => {
   return (
-    <Show when={props.articles} fallback={<p>Loading articles...</p>}>
+    <Show when={props.articles}>
       <For
         each={props.articles.articles}
         fallback={

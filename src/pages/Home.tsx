@@ -1,5 +1,5 @@
 import { Link, Route, useRouter } from "solid-app-router";
-import { Component, createEffect, For, Show } from "solid-js";
+import { Component, For, Show, Suspense } from "solid-js";
 import { useStore } from "../store/globalStore";
 import { IArticle } from "../types/article.interface";
 
@@ -47,7 +47,9 @@ const Home: Component<{
               </ul>
             </div>
 
-            <Route />
+            <Suspense fallback={<p>Loading feed...</p>}>
+              <Route />
+            </Suspense>
           </div>
 
           <div class="col-md-3">
