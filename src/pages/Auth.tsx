@@ -1,5 +1,5 @@
 import { Link, useRouter } from "solid-app-router";
-import { Component, createSignal, For, JSX, Show } from "solid-js";
+import { Component, createSignal, JSX, Show } from "solid-js";
 import Errors from "../components/Errors";
 import { useApi } from "../store/apiStore";
 import { useStore } from "../store/globalStore";
