@@ -24,6 +24,13 @@
     <!-- Import the custom Bootstrap 4 theme from our hosted CDN -->
     <link href="https://demo.productionready.io/main.css" rel="stylesheet" />
 
+    <!-- This might fix cumulative shift layout.. -->
+    <style>
+      body {
+        min-height: 101vh;
+      }
+    </style>
+
     <script src="/src/index.tsx" type="module" async></script>
   </head>
 
