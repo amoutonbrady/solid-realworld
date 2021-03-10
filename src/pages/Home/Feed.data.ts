@@ -1,5 +1,5 @@
 import { DataFn } from "solid-app-router";
-import { createResource } from "solid-js";
+import { createResource, mergeProps } from "solid-js";
 import { useApi } from "../../store/apiStore";
 
 const HomeFeedData: DataFn = (props) => {
@@ -8,11 +8,11 @@ const HomeFeedData: DataFn = (props) => {
   const location = props.location;
 
   const [articles] = createResource(
-    () => props.query,
+    () => mergeProps({ limit: "10", offset: "0" }, props.query),
     (query) => {
       return location.includes("feed")
         ? api.article.feed(query as any)
-        : api.article.list(query);
+        : api.article.list(query as any);
     }
   );
 

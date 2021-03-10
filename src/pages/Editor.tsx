@@ -1,9 +1,10 @@
 import { useRouter } from "solid-app-router";
 import { Component, createSignal, JSX, Show } from "solid-js";
+
 import Errors from "../components/Errors";
 import { useApi } from "../store/apiStore";
-import { IArticle } from "../types/article.interface";
 import { prevent } from "../utils/preventDefault";
+import { IArticle } from "../types/article.interface";
 
 const Editor: Component<{
   isUpdate: boolean;
@@ -38,7 +39,7 @@ const Editor: Component<{
 
         <div class="row">
           <div class="col-md-10 offset-md-1 col-xs-12">
-            <Show when={props.article}>
+            <Show when={!props.isUpdate || props.article}>
               <form onSubmit={prevent(submit)}>
                 <fieldset>
                   <fieldset class="form-group">

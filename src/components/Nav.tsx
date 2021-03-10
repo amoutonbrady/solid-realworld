@@ -1,22 +1,24 @@
-import { Component, createEffect, Show } from "solid-js";
-import { Link } from "solid-app-router";
+import { Component, Show } from "solid-js";
+import { Link, NavLink, useRouter } from "solid-app-router";
+
 import { useStore } from "../store/globalStore";
 
 const Nav: Component = () => {
   const [store] = useStore();
+  const [router] = useRouter();
 
   return (
     <nav class="navbar navbar-light">
       <div class="container">
-        <Link class="navbar-brand" href="/">
+        <NavLink class="navbar-brand" href="/">
           conduit
-        </Link>
+        </NavLink>
 
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
-            <Link class="nav-link active" href="/">
+            <NavLink class="nav-link" exact activeClass="active" href="/">
               Home
-            </Link>
+            </NavLink>
           </li>
 
           <Show
@@ -24,31 +26,46 @@ const Nav: Component = () => {
             fallback={
               <>
                 <li class="nav-item">
-                  <Link class="nav-link" href="/login">
+                  <NavLink class="nav-link" activeClass="active" href="/login">
                     Sign in
-                  </Link>
+                  </NavLink>
                 </li>
 
                 <li class="nav-item">
-                  <Link class="nav-link" href="/register">
+                  <NavLink
+                    class="nav-link"
+                    activeClass="active"
+                    href="/register"
+                  >
                     Sign up
-                  </Link>
+                  </NavLink>
                 </li>
               </>
             }
           >
             <li class="nav-item">
-              <Link class="nav-link" href="/editor">
+              <NavLink
+                class="nav-link"
+                activeClass="active"
+                exact
+                href="/editor"
+              >
                 <i class="ion-compose"></i> New Post
-              </Link>
+              </NavLink>
             </li>
             <li class="nav-item">
-              <Link class="nav-link" href="/settings">
+              <NavLink class="nav-link" activeClass="active" href="/settings">
                 <i class="ion-gear-a"></i> Settings
-              </Link>
+              </NavLink>
             </li>
             <li class="nav-item">
-              <Link class="nav-link" href={`/profile/${store.user.username}`}>
+              <Link
+                class="nav-link"
+                classList={{
+                  active: router.location.includes(store.user.username),
+                }}
+                href={`/profile/${store.user.username}`}
+              >
                 {store.user.username}
               </Link>
             </li>

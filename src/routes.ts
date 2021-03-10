@@ -38,12 +38,12 @@ export const routes: RouteDefinition[] = [
     component: lazy(() => import("./pages/Settings")),
   },
   {
-    path: "/editor",
+    path: "/editor/:slug",
     component: lazy(() => import("./pages/Editor")),
     data: EditorData,
   },
   {
-    path: "/editor/:slug",
+    path: "/editor",
     component: lazy(() => import("./pages/Editor")),
     data: EditorData,
   },
