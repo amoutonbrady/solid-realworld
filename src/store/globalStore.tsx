@@ -1,12 +1,15 @@
 import {
   Component,
   createContext,
+  createResource,
   createSignal,
-  Show,
+  Suspense,
   useContext,
 } from "solid-js";
-import { IUser } from "../types/user.interface";
+
 import { useApi } from "./apiStore";
+import { isServer } from "solid-js/web";
+import { IUser } from "../types/user.interface";
 
 /**
  * We use cookie to store the token in order to have
@@ -32,32 +35,35 @@ const cookie = {
   },
 };
 
-async function createStore() {
+function createStore(ctx: any) {
   const authApi = useApi("auth");
-  const token = cookie.get("token");
+  const token = isServer ? ctx.token : cookie.get("token");
+
+  if (token) {
+    authApi.setToken(token);
+  }
 
   /**
    * This is our current user
    */
-  const [user, setUser] = createSignal<IUser>();
+  const [user, setUser] = createSignal<Partial<IUser>>({});
 
   /**
    * If we have a token at the initialization of the app
    * we want to fetch the current user and fill in the store.
    */
-  if (token) {
-    authApi.setToken(token);
-    const user = await authApi.me();
-    setUser(user);
-  }
+  const [user$] = createResource(user, async (user) => {
+    if (user.token) return user;
+    return token ? authApi.me() : undefined;
+  });
 
   return [
     {
       get user() {
-        return user();
+        return user$();
       },
       get isLoggedIn() {
-        return !!user();
+        return !!user$();
       },
     },
     {
@@ -92,18 +98,17 @@ type Store = ThenArg<ReturnType<typeof createStore>>;
 
 const StoreContext = createContext<Store>();
 
-const StoreProvider: Component = (props) => {
+const StoreProvider: Component<{ ctx?: any }> = (props) => {
   /**
    * This is a hacky way of having an async store init.
    * This allow us to wait for the store to be created before
    * rendering the application.
    */
-  const [store, setStore] = createSignal<Store>();
-  createStore().then(setStore);
+  const store = createStore(props.ctx);
 
   return (
-    <StoreContext.Provider value={store()}>
-      <Show when={store()}>{props.children}</Show>
+    <StoreContext.Provider value={store}>
+      {props.children}
     </StoreContext.Provider>
   );
 };

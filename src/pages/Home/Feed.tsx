@@ -7,7 +7,7 @@ const HomeFeed: Component<{
   articlesCount: (count: number) => void;
 }> = (props) => {
   createEffect(() => {
-    // We want to emot the number of articles for this feed.
+    // We want to emit the number of articles for this feed.
     // This might be better off handled in the .data.ts file and
     // stored in the global store maybe
     if (props.articles && props.articlesCount) {

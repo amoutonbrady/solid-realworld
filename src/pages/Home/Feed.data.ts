@@ -1,10 +1,11 @@
 import { DataFn } from "solid-app-router";
 import { createResource, mergeProps } from "solid-js";
+
 import { useApi } from "../../store/apiStore";
 
 const HomeFeedData: DataFn = (props) => {
   const api = useApi();
-  // We want to do this because we don't want to track location
+  // We don't want to track location
   const location = props.location;
 
   const [articles] = createResource(

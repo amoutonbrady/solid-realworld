@@ -1,20 +1,22 @@
+import fetch from "node-fetch";
 import { Router } from "solid-app-router";
-import { hydrate, render } from "solid-js/web";
+import { renderToNodeStream } from "solid-js/web";
 
 import App from "./App";
 import { routes } from "./routes";
 import ApiProvider from "./store/apiStore";
 import StoreProvider from "./store/globalStore";
 
-hydrate(
-  () => (
+globalThis.fetch = fetch;
+
+export function render(url: string, ctx: any) {
+  return renderToNodeStream(() => (
     <ApiProvider>
-      <StoreProvider>
-        <Router routes={routes}>
+      <StoreProvider ctx={ctx}>
+        <Router initialURL={url} routes={routes}>
           <App />
         </Router>
       </StoreProvider>
     </ApiProvider>
-  ),
-  document.getElementById("app")
-);
+  ));
+}
